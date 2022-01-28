@@ -2,21 +2,37 @@
 
 ## About
 
-`cypxml` provides quite the same functionalities as `xmlwitch`. Both libraries have
-quite the same performances for now:
+`cypxml` generates an XML content. `cypxml` provides quite the same functionalities
+as the `xmlwitch` library. Both tools have quite the same performances for now:
   - see: `test_perf.sh`
   - `xmlwitch` writes sequentially the generated XML into a BytesIO(), which
       is quite fast.
-  - `cypxml` generate a Str() for each XML Tag, from the Str() of each XML child,
-    recursively. This is a slower algo than `xmlwitch`, but will permit some multicore
-    implementation.
+  - `cypxml` generates a Str() for each XML Tag, from the Str() of each XML child,
+    recursively. This is an algorithm slower than `xmlwitch`'s, but it will permit
+    some multicore implementation in the future versions.
 
-## Building the library
+CythonPlus: https://www.cython.plus and https://pypi.org/project/cython-plus
 
-Requires:  Cython+ environment
+xmlwitch: https://github.com/galvez/xmlwitch
 
 
-Run: `make.sh`
+## Installation
+
+- Prerequisites:
+    - Linux with C++ development environment (tested on Ubuntu 2020),
+    - Python 3.8+,
+    - CythonPlus installed (see https://pypi.org/project/cython-plus/)
+
+- {fmt} library:
+
+    `cypxml` uses the libfmt library. For convenience a copy of fmtlib version 8.1
+    is included in this package and compiled locally as static library during the build
+    process.
+    See https://github.com/fmtlib/fmt
+
+- build:
+
+    `./make.sh`
 
 
 ## Usage
@@ -116,3 +132,12 @@ Size (MB): 2.57
 ...
 -------------------------------------
 ```
+
+## Sources
+
+https://github.com/abilian/cypxml
+
+
+## License
+
+MIT, see LICENSE file.
