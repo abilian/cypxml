@@ -50,6 +50,17 @@ cdef Str test_content(name):
 
 ##############################################################################
 
+cdef void print_err(Str expected, Str result):
+    print("----- result:")
+    print(result.bytes())
+    print("----- result:")
+    print(result.bytes().decode("utf8"))
+    print("----- expected:")
+    print(expected.bytes().decode("utf8"))
+    print("-----")
+
+##############################################################################
+
 cdef bint test_min():
     cdef cypXML xml
     cdef Str expected
@@ -60,8 +71,7 @@ cdef bint test_min():
     result = xml.dump()
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_version():
@@ -76,8 +86,7 @@ cdef bint test_version():
     result = xml.dump()
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_1_tag():
@@ -92,8 +101,7 @@ cdef bint test_1_tag():
     expected = Str("<tag />\n")
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_2_tag():
@@ -109,8 +117,7 @@ cdef bint test_2_tag():
     expected = Str("<tag />\n<tig />\n")
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_3_tag():
@@ -127,8 +134,7 @@ cdef bint test_3_tag():
     expected = Str("<tag />\n<tig />\n<tag />\n")
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_1_tag_text():
@@ -144,8 +150,7 @@ cdef bint test_1_tag_text():
     expected = Str("<tag>content.</tag>\n")
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_2_tag_text():
@@ -163,9 +168,7 @@ cdef bint test_2_tag_text():
     expected = Str("<tag1>content1.</tag1>\n<tag2>content2.</tag2>\n")
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_2_tag_text_mod():
@@ -183,9 +186,7 @@ cdef bint test_2_tag_text_mod():
     expected = Str("<tag1>content1.</tag1>\n<tag2>content2.</tag2>\n")
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_1_attr():
@@ -202,9 +203,7 @@ cdef bint test_1_attr():
 
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_1_attr_text_to_escape():
@@ -222,9 +221,7 @@ cdef bint test_1_attr_text_to_escape():
 
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_1_embed():
@@ -243,9 +240,7 @@ cdef bint test_1_embed():
 
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_1_embed_attr_text():
@@ -268,9 +263,33 @@ cdef bint test_1_embed_attr_text():
 
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
+    raise RuntimeError()
+
+cdef bint test_2_embed_attr_text():
+    cdef cypXML xml
+    cdef Str expected
+    cdef Str result
+
+    xml = cypXML()
+    t1 = xml.tag(Str("tag1"))
+    t2 = t1.tag(Str("tag2"))
+    t2.attr(Str("key"), Str("value"))
+    t3 = t2.tag(Str("tag3"))
+    t3.text(Str("description 3"))
+    t32 = t2.tag(Str("tag3bis"))
+    t32.text(Str("description & 3bis"))
+    t32.attr(Str("x"), Str("y"))
+    t32.tag(Str("elem"))
+    t32.tag(Str("elem"))
+    t32.tag(Str("elem"))
+    result = xml.dump()
+
+    expected = Str("<tag1>\n  <tag2 key=\"value\">\n    <tag3>description 3</tag3>\n    <tag3bis x=\"y\">description &amp; 3bis\n      <elem />\n      <elem />\n      <elem />\n    </tag3bis>\n  </tag2>\n</tag1>\n")
+
+    if result == expected:
+        return 1
+    print_err(expected, result)
     raise RuntimeError()
 
 ##############################################################################
@@ -293,9 +312,7 @@ cdef bint test_utf8_document(Str expected):
 
     if result == expected:
         return 1
-    print("-------------------------------------")
-    print(result.bytes())
-    print(result.bytes().decode("utf8"))
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_simple_document(Str expected):
@@ -317,13 +334,7 @@ cdef bint test_simple_document(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_rootless_fragment(Str expected):
@@ -340,13 +351,7 @@ cdef bint test_rootless_fragment(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_nested_elements(Str expected):
@@ -373,13 +378,7 @@ cdef bint test_nested_elements(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_namespaces(Str expected):
@@ -397,13 +396,7 @@ cdef bint test_namespaces(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_extended_syntax(Str expected):
@@ -430,13 +423,7 @@ cdef bint test_extended_syntax(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_content_escaping(Str expected):
@@ -455,13 +442,7 @@ cdef bint test_content_escaping(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 cdef bint test_atom_feed(Str expected):
@@ -494,13 +475,7 @@ cdef bint test_atom_feed(Str expected):
 
     if result == expected:
         return 1
-    print("----- result:")
-    print(result.bytes())
-    print("----- result:")
-    print(result.bytes().decode("utf8"))
-    print("----- expect:")
-    print(expected.bytes().decode("utf8"))
-    print("-----")
+    print_err(expected, result)
     raise RuntimeError()
 
 ##############################################################################
@@ -521,6 +496,7 @@ def main():
     test_1_attr_text_to_escape()
     test_1_embed()
     test_1_embed_attr_text()
+    test_2_embed_attr_text()
     test_utf8_document(test_content("utf8_document.xml"))
     test_simple_document(test_content("simple_document.xml"))
     test_rootless_fragment(test_content("rootless_fragment.xml"))
