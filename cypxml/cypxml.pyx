@@ -5,6 +5,8 @@ from libcythonplus.list cimport cyplist
 
 from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate
 
+from scheduler.scheduler cimport SequentialMailBox, NullResult, Scheduler
+
 
 cdef Str to_str(byte_or_string):
     if isinstance(byte_or_string, str):

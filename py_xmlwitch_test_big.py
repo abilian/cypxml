@@ -4,11 +4,11 @@ import xmlwitch
 from time import perf_counter
 
 
-def test_large():
+def gen_xml_xw():
     xml = xmlwitch.Builder(version="1.0")
-    for geo in range(5):
+    for geo in range(4):
         with xml.Geo(zone=str(geo)):
-            for area in range(5):
+            for area in range(8):
                 with xml.Area(where=str(area)):
                     for city in range(40):
                         with xml.City:
@@ -16,19 +16,28 @@ def test_large():
                             xml.Location(f"location of city {city}")
                             for item in range(50):
                                 xml.item(ref=str(item), number="10", date="2022-1-1")
-    return str(xml)
+    return xml
 
 
 def main():
     print("-------------------------------------")
-    print("Test large - python xmlwitch")
+    print("0 - Test big file - pure python using xmlwitch")
+
     t0 = perf_counter()
-    content = test_large()
-    dt = (perf_counter() - t0) * 1000
-    print(f"Duration (ms): {dt:.0f}")
+    xml = gen_xml_xw()
+    dt_generate = (perf_counter() - t0) * 1000
+
+    t0 = perf_counter()
+    content = str(xml)
+    dt_dump = (perf_counter() - t0) * 1000
+
+    print(f"Duration total (ms): {dt_dump+dt_generate:.0f}")
+    print(f"  - dump xml (ms): {dt_dump:.0f}")
+    print(f"  - gen xml  (ms): {dt_generate:.0f}")
     print("-------------------------------------")
     print(f"Size (MB): {len(content)/(2**20):.2f}")
-    print("\n".join(content.splitlines()[:8]))
+    print("...")
+    print("\n".join(content.splitlines()[:3]))
     print("...")
     print("-------------------------------------")
     print()

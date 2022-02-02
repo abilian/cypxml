@@ -4,7 +4,7 @@ NAME="cypxml"
 
 . make_libfmt.sh
 
-[[ -d build/${NAME} ]] && find build/${NAME} -name "*.so" -delete
+[[ -d build/${NAME} ]] && rm -fr build
 mkdir -p build
 rsync -a libfmt build/
 rsync -a ${NAME} build/

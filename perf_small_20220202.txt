@@ -1,0 +1,175 @@
+======== bench ========
+-------------------------------------
+0 - Small file (x100) - pure python using xmlwitch
+Duration total (ms): 130
+  - dump xml (ms): 0
+  - gen xml  (ms): 130
+-------------------------------------
+Size (MB): 0.00
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo ref="0" zone="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+1 - Small file (x100) - cythonplus cypXML, cores = auto
+Duration total (ms): 70
+  - dump xml (ms): 40
+  - gen xml  (ms): 30
+Depth_max: 1, workers: 0
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+2 - Small file (x100) - cythonplus cypXML
+Duration total (ms): 68
+  - dump xml (ms): 39
+  - gen xml  (ms): 29
+Depth_max: 1, workers: 2
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+3 - Small file (x100) - cythonplus cypXML, cores = auto
+Duration total (ms): 75
+  - dump xml (ms): 43
+  - gen xml  (ms): 32
+Depth_max: 2, workers: 0
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+4 - Small file (x100) - cythonplus cypXML
+Duration total (ms): 83
+  - dump xml (ms): 54
+  - gen xml  (ms): 29
+Depth_max: 2, workers: 2
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+5 - Small file (x100) - cythonplus cypXML
+Duration total (ms): 92
+  - dump xml (ms): 60
+  - gen xml  (ms): 32
+Depth_max: 2, workers: 8
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+6 - Small file (x100) - cythonplus cypXML, cores = auto
+Duration total (ms): 94
+  - dump xml (ms): 62
+  - gen xml  (ms): 31
+Depth_max: 3, workers: 0
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+7 - Small file (x100) - cythonplus cypXML
+Duration total (ms): 139
+  - dump xml (ms): 108
+  - gen xml  (ms): 31
+Depth_max: 3, workers: 2
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+8 - Small file (x100) - cythonplus cypXML
+Duration total (ms): 118
+  - dump xml (ms): 84
+  - gen xml  (ms): 34
+Depth_max: 3, workers: 8
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+9 - Small file (x100) - cythonplus cypXML
+Duration total (ms): 97
+  - dump xml (ms): 65
+  - gen xml  (ms): 32
+Depth_max: 999, workers: 4
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+
+-------------------------------------
+10 - Small file (x100) - cythonplus cypXML, recursive (no thread)
+Duration total (ms): 42
+  - dump xml (ms): 10
+  - gen xml  (ms): 32
+Depth_max: 0, workers: 0
+-------------------------------------
+Size (MB): 0.00
+nb of tags: 84
+...
+<?xml version="1.0" encoding="utf-8"?>
+<Geo zone="0" ref="0">
+  <Area where="0">
+...
+-------------------------------------
+

@@ -40,7 +40,9 @@ def pypyx_ext(*pathname):
         sources=[src],
         language="c++",
         extra_compile_args=[
+            # "-pthread",
             "-std=c++17",
+            # "-std=c++11",
             "-O3",
             "-Wno-unused-function",
             "-Wno-deprecated-declarations",
@@ -56,7 +58,9 @@ extensions = [
     pypyx_ext(NAME, "test_xml_utils"),
     pypyx_ext(NAME, "cypxml"),
     pypyx_ext(NAME, "test_cypxml"),
-    pypyx_ext(NAME, "test_perf"),
+    pypyx_ext(NAME, "test_perf_big"),
+    pypyx_ext(NAME, "test_perf_very_big"),
+    pypyx_ext(NAME, "test_perf_small"),
     pypyx_ext(NAME, "__init__"),
 ]
 
@@ -74,11 +78,11 @@ setup(
     version=version,
     author="Jerome Dumonteil",
     author_email="jd@abilian.com",
-    url="https://github.com/abilian/cypxml",
+    url="https://github.com/abilian/cythonplus-sandbox/exemples/xmlcyp",
     packages=find_packages(exclude=["tests*"]),
     license="MIT",
-    description="Some XML generator, written in Cython+",
-    long_description="Some XML generator, written in Cython+",
+    description="Some lib using Cython+",
+    long_description="Some lib using Cython+",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Internet",

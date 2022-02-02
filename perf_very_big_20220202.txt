@@ -1,0 +1,127 @@
+======== bench ========
+-------------------------------------
+0 - Test very big file - pure python using xmlwitch
+Duration total (ms): 9509
+  - dump xml (ms): 10
+  - gen xml  (ms): 9499
+-------------------------------------
+Size (MB): 27.38
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+1 - Test very big file - cythonplus cypXML, cores = auto
+Duration total (ms): 10221
+  - dump xml (ms): 3221
+  - gen xml  (ms): 7000
+Depth_max: 1, workers: 0
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+2 - Test very big file - cythonplus cypXML
+Duration total (ms): 10245
+  - dump xml (ms): 3232
+  - gen xml  (ms): 7012
+Depth_max: 1, workers: 2
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+3 - Test very big file - cythonplus cypXML, cores = auto
+Duration total (ms): 10008
+  - dump xml (ms): 3015
+  - gen xml  (ms): 6993
+Depth_max: 2, workers: 0
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+4 - Test very big file - cythonplus cypXML
+Duration total (ms): 10491
+  - dump xml (ms): 3469
+  - gen xml  (ms): 7022
+Depth_max: 2, workers: 2
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+5 - Test very big file - cythonplus cypXML, cores = auto
+Duration total (ms): 10052
+  - dump xml (ms): 3053
+  - gen xml  (ms): 6999
+Depth_max: 3, workers: 0
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+6 - Test very big file - cythonplus cypXML
+Duration total (ms): 11586
+  - dump xml (ms): 4584
+  - gen xml  (ms): 7002
+Depth_max: 999, workers: 4
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
+-------------------------------------
+7 - Test very big file - cythonplus cypXML, recursive (no thread)
+Duration total (ms): 7689
+  - dump xml (ms): 680
+  - gen xml  (ms): 7009
+Depth_max: 0, workers: 0
+-------------------------------------
+Size (MB): 27.38
+nb of tags: 543016
+...
+<?xml version="1.0" encoding="utf-8"?>
+<World zone="0">
+  <Geo zone="0">
+...
+-------------------------------------
+
