@@ -8,7 +8,7 @@ BUILD="build_fmt"
     echo "$DEST/libfmt.a found."
     return
 }
-[[ -f $SRC.tar.gz ]] || {
+[[ -f ./vendor/$SRC.tar.gz ]] || {
     echo "Error: $SRC.tar.gz not found."
     exit 1
 }
@@ -16,7 +16,7 @@ BUILD="build_fmt"
 [[ -d $BUILD ]] && rm -fr ${BUILD}
 mkdir -p ${BUILD}
 cd ${BUILD}
-tar xzf ../${SRC}.tar.gz
+tar xzf ../vendor/${SRC}.tar.gz
 cd ${SRC}
 cmake -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE .
 make fmt
