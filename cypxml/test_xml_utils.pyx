@@ -6,7 +6,7 @@ from stdlib.format cimport format
 from .stdlib.xml_utils cimport replace_one, replace_all
 from .stdlib.xml_utils cimport escape, escaped, unescape, unescaped
 from .stdlib.xml_utils cimport quoteattr, quotedattr, nameprep
-from .stdlib.xml_utils cimport concate
+from .stdlib.xml_utils cimport concate, indented
 
 cdef bint test_replace_one_1():
     cdef Str src
@@ -1012,6 +1012,53 @@ cdef bint test_concate_3():
 
 #############################################################################
 
+cdef bint test_indented_1():
+    cdef Str content, space
+    cdef Str expected
+    cdef Str result
+
+    space = Str("  ")
+    content = Str("aaa")
+    expected = Str("  aaa\n")
+    result = indented(content, space)
+    if result == expected:
+        return 1
+    print("-------------------------------------")
+    print(result.bytes())
+    raise RuntimeError()
+
+cdef bint test_indented_2():
+    cdef Str content, space
+    cdef Str expected
+    cdef Str result
+
+    space = Str("  ")
+    content = Str("aaa\nbbb\n")
+    expected = Str("  aaa\n  bbb\n")
+    result = indented(content, space)
+    if result == expected:
+        return 1
+    print("-------------------------------------")
+    print(result.bytes())
+    raise RuntimeError()
+
+cdef bint test_indented_3():
+    cdef Str content, space
+    cdef Str expected
+    cdef Str result
+
+    space = Str("  ")
+    content = Str("aaa\n  bbb\naaa\n")
+    expected = Str("  aaa\n    bbb\n  aaa\n")
+    result = indented(content, space)
+    if result == expected:
+        return 1
+    print("-------------------------------------")
+    print(result.bytes())
+    raise RuntimeError()
+
+#############################################################################
+
 def main():
     print("-------------------------------------")
     print("Test xml_utils.")
@@ -1074,4 +1121,7 @@ def main():
     test_concate_1()
     test_concate_2()
     test_concate_3()
+    test_indented_1()
+    test_indented_2()
+    test_indented_3()
     print("Done.")

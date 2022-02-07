@@ -4,7 +4,7 @@ from stdlib.format cimport format
 from libcythonplus.dict cimport cypdict
 from libcythonplus.list cimport cyplist
 
-from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate
+from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate, indented
 
 # from scheduler.scheduler cimport SequentialMailBox, NullResult, Scheduler
 # Using BatchMailBox seems more fast:
@@ -77,6 +77,17 @@ cdef cypclass cypXML:
 
     Elem stag(self, const char* name):
         return self.tag(Str(name))
+
+    void append(self, Str content):
+        cdef cypElement e
+
+        if self.root is NULL:
+            self.root = cypElement(Str(), self.indent_space, Str(), self.rope)
+            self.root.child_space = Str()
+        self.root.append(content)
+
+    Elem sappend(self, const char* content):
+        self.append(Str(content))
 
     int tag_count(self):
         cdef int nb
@@ -421,13 +432,17 @@ cdef cypclass cypElement:
                         self.name,
                     )
                 else:
-                    result = format(
-                        "{}<{}>{}</{}>\n",
-                        self.current_space,
-                        self.name,
-                        concate(self.content),
-                        self.name,
-                    )
+                    if self.name.__len__() == 0:
+                        # it's an appended string, not a xml element
+                        result = indented(self.content[0], self.current_space)
+                    else:
+                        result = format(
+                            "{}<{}>{}</{}>\n",
+                            self.current_space,
+                            self.name,
+                            concate(self.content),
+                            self.name,
+                        )
         else:
             if self.content_tail is not NULL and self.content_tail.__len__() > 0:
                 if self.attributes is not NULL and self.attributes.__len__() > 0:
@@ -678,6 +693,35 @@ cdef cypclass cypElement:
         self.rope.append(link)
         return link
 
+    void append(self, Str content):
+        """Append an arbitrary string as child of current element. The string
+        can be the dump() of another cypxml() instance.
+
+        Return the root element (not the added string)
+        """
+        cdef cypElement e
+
+        if content is NULL or content.__len__() == 0:
+            return
+
+        if self.child_space is NULL:
+            self.child_space = format(
+                                        "{}{}",
+                                        self.current_space,
+                                        self.indent_space,
+                                    )
+
+        # the null Str() indicates that this is not a regular element, but an appended string
+        e = cypElement(Str(), self.indent_space, self.child_space, self.rope)
+        e._set_content(content)
+        if self.children is NULL:
+            self.children = cyplist[cypElement]()
+        self.children.append(e)
+
+    void _set_content(self, Str content):
+        self.content = cyplist[Str]()
+        self.content.append(content)
+
     void attr(self, Str key, Str value):
         """Append an attribute to current element
 
@@ -723,6 +767,13 @@ cdef cypclass Elem:
 
     Elem stag(self, const char * name):
         return self.target.tag(Str(name))
+
+    Elem append(self, Str content):
+        self.target.append(content)
+        return self
+
+    Elem sappend(self, const char * content):
+        self.target.append(Str(content))
 
     Elem attr(self, Str key, Str value):
         self.target.attr(key, value)

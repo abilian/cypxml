@@ -824,6 +824,43 @@ cdef bint test_deep_tree(Str expected, int depth=3):
     print_err(expected, result, "test_deep_tree", xml.max_depth)
     raise RuntimeError()
 
+cdef bint test_append_subtree(Str expected, int depth=3):
+    cdef cypXML xml
+    cdef Str result
+
+    xml = cypXML()
+    xml.set_max_depth(depth)
+    xml.init_version(Str("1.0"))
+    b = xml.stag("base")
+    b.stag("element").stext("aaa")
+
+    xml1 = cypXML()
+    xml1.set_max_depth(depth)
+    x1 = xml1.stag("subtree1").stag("element").stag("element")
+    x1.stag("element").stext("ccc")
+
+    b.append(xml1.dump())
+    b.stag("element").stext("bbb")
+
+    xml2 = cypXML()
+    xml2.set_max_depth(depth)
+    xml2.stag("subtree2").stag("element").stext("ddd")
+
+    xml3 = cypXML()
+    xml3.set_max_depth(depth)
+    xml3.stag("subtree3").stag("element").stext("eee")
+
+    xml.append(xml2.dump())
+    xml.sappend("<string>sss</string>")
+    xml.append(xml3.dump())
+
+    result = xml.dump()
+
+    if result == expected:
+        return 1
+    print_err(expected, result, "test_append_subtree", xml.max_depth)
+    raise RuntimeError()
+
 ##############################################################################
 
 
@@ -902,4 +939,6 @@ def main():
     test_deep_tree(test_content("deep_tree.xml"), 3)
     test_deep_tree(test_content("deep_tree.xml"), 4)
     test_deep_tree(test_content("deep_tree.xml"), 999)
+    test_append_subtree(test_content("append_subtree.xml"))
+    test_append_subtree(test_content("append_subtree.xml"), 0)
     print("Done.")

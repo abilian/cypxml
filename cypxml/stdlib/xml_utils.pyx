@@ -193,3 +193,13 @@ cdef Str concate(cyplist[Str] strings) nogil:
     for s in strings:
         joined._str.append(s._str)
     return joined
+
+cdef Str indented(Str content, Str space) nogil:
+    cdef cyplist[Str] splitted
+    cdef Str internal_indent, joined, result
+
+    splitted = content.split(Str("\n"))
+    internal_indent = format("\n{}", space)
+    joined = internal_indent.join(splitted)
+    result = format("{}{}\n",space, joined)
+    return result
