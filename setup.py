@@ -1,6 +1,9 @@
 import ast
 import os
-from os.path import join
+from os.path import join, exists
+from os import makedirs
+from shutil import rmtree, copytree, copy
+from subprocess import run
 import re
 import sys
 
@@ -27,6 +30,36 @@ def read_version():
 
 
 version = read_version()
+
+
+def build_libfmt():
+    libfmt = join(PROJECT_ROOT, "libfmt")
+    if exists(join(libfmt, "libfmt.a")):
+        print("libfmt.a found")
+        return
+    if not exists(libfmt):
+        makedirs(libfmt)
+    src = "fmt-8.0.1"
+    src_path = join(PROJECT_ROOT, "vendor", f"{src}.tar.gz")
+    if not exists(src_path):
+        raise ValueError(f"{src_path} not found")
+    build = join(PROJECT_ROOT, "build_fmt")
+    if exists(build):
+        rmtree(build)
+    makedirs(build)
+    print("now:", os.getcwd())
+    orig_wd = os.getcwd()
+    os.chdir(build)
+    run(["tar", "xzf", src_path])
+    os.chdir(join(build, src))
+    run(["cmake", "-DCMAKE_POSITION_INDEPENDENT_CODE=TRUE", "."])
+    run(["make", "fmt"])
+    os.chdir(orig_wd)
+    copytree(join(build, src, "include", "fmt"), join(libfmt, "fmt"))
+    copy(join(build, src, "libfmt.a"), libfmt)
+
+
+build_libfmt()
 
 
 def pypyx_ext(*pathname):

@@ -31,9 +31,9 @@ xmlwitch: https://github.com/galvez/xmlwitch
     process.
     See https://github.com/fmtlib/fmt
 
-- build:
+- build and install:
 
-    `./make.sh`
+    `pip install -e .`
 
 
 ## Usage
