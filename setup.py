@@ -1,20 +1,16 @@
 import ast
-import os
-from os.path import join, exists
-from os import makedirs
+from os.path import join, exists, abspath, dirname
+from os import makedirs, chdir, getcwd
+import re
 from shutil import rmtree, copytree, copy
 from subprocess import run
-import re
-import sys
 
-from setuptools import find_packages
-
-from distutils.core import setup
-from distutils.extension import Extension
+from setuptools import setup, find_packages
+from setuptools.extension import Extension
 from Cython.Build import cythonize
 
+PROJECT_ROOT = abspath(dirname(__file__))
 NAME = "cypxml"
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
 def read(*path):
@@ -29,9 +25,6 @@ def read_version():
     return str(ast.literal_eval(version_string))
 
 
-version = read_version()
-
-
 def build_libfmt():
     libfmt = join(PROJECT_ROOT, "libfmt")
     if exists(join(libfmt, "libfmt.a")):
@@ -40,21 +33,20 @@ def build_libfmt():
     if not exists(libfmt):
         makedirs(libfmt)
     src = "fmt-8.0.1"
-    src_path = join(PROJECT_ROOT, "vendor", f"{src}.tar.gz")
+    src_path = join(PROJECT_ROOT, "..", "..", "vendor", f"{src}.tar.gz")
     if not exists(src_path):
         raise ValueError(f"{src_path} not found")
     build = join(PROJECT_ROOT, "build_fmt")
     if exists(build):
         rmtree(build)
     makedirs(build)
-    print("now:", os.getcwd())
-    orig_wd = os.getcwd()
-    os.chdir(build)
+    orig_wd = getcwd()
+    chdir(build)
     run(["tar", "xzf", src_path])
-    os.chdir(join(build, src))
+    chdir(join(build, src))
     run(["cmake", "-DCMAKE_POSITION_INDEPENDENT_CODE=TRUE", "."])
     run(["make", "fmt"])
-    os.chdir(orig_wd)
+    chdir(orig_wd)
     copytree(join(build, src, "include", "fmt"), join(libfmt, "fmt"))
     copy(join(build, src, "libfmt.a"), libfmt)
 
@@ -62,23 +54,23 @@ def build_libfmt():
 build_libfmt()
 
 
-def pypyx_ext(*pathname):
+def ext_pyx(*pathname):
+    "return an Extension for Cython+ compilation"
     src = join(*pathname) + ".pyx"
-    if not os.path.exists(src):
+    if not exists(src):
         src = join(*pathname) + ".py"
-    if not os.path.exists(src):
+    if not exists(src):
         raise ValueError(f"file not found: {src}")
     return Extension(
-        ".".join(pathname),
-        sources=[src],
+        name=".".join(pathname),
         language="c++",
+        sources=[src],
         extra_compile_args=[
-            # "-pthread",
             "-std=c++17",
-            # "-std=c++11",
             "-O3",
-            "-Wno-unused-function",
+            "-pthread",
             "-Wno-deprecated-declarations",
+            "-Wno-unused-function",
         ],
         libraries=["fmt"],
         include_dirs=["libfmt"],
@@ -87,35 +79,35 @@ def pypyx_ext(*pathname):
 
 
 extensions = [
-    pypyx_ext(NAME, "stdlib", "xml_utils"),
-    pypyx_ext(NAME, "test_xml_utils"),
-    pypyx_ext(NAME, "cypxml"),
-    pypyx_ext(NAME, "test_cypxml"),
-    pypyx_ext(NAME, "test_perf_big"),
-    pypyx_ext(NAME, "test_perf_very_big"),
-    pypyx_ext(NAME, "test_perf_small"),
-    pypyx_ext(NAME, "__init__"),
+    ext_pyx(NAME, "stdlib", "xml_utils"),
+    ext_pyx(NAME, "test_xml_utils"),
+    ext_pyx(NAME, "cypxml"),
+    ext_pyx(NAME, "test_cypxml"),
+    ext_pyx(NAME, "test_perf_big"),
+    ext_pyx(NAME, "test_perf_very_big"),
+    ext_pyx(NAME, "test_perf_small"),
+    ext_pyx(NAME, "__init__"),
 ]
 
 
 setup(
+    name=NAME,
+    version=read_version(),
     ext_modules=cythonize(
         extensions,
         language_level="3str",
         include_path=[
-            os.path.join(PROJECT_ROOT, NAME, "stdlib"),
-            os.path.join(PROJECT_ROOT, NAME),
+            join(PROJECT_ROOT, NAME, "stdlib"),
+            join(PROJECT_ROOT, NAME),
         ],
     ),
-    name=NAME,
-    version=version,
     author="Jerome Dumonteil",
     author_email="jd@abilian.com",
     url="https://github.com/abilian/cythonplus-sandbox/exemples/xmlcyp",
     packages=find_packages(exclude=["tests*"]),
     license="MIT",
-    description="Some lib using Cython+",
-    long_description="Some lib using Cython+",
+    description="XML library using Cython+",
+    long_description="XML library using Cython+",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Internet",

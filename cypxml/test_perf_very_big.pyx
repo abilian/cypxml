@@ -1,7 +1,8 @@
-from stdlib.string cimport Str
-from stdlib.format cimport format
 from libcythonplus.dict cimport cypdict
 from libcythonplus.list cimport cyplist
+
+from .stdlib.string cimport Str
+from .stdlib.format cimport format
 
 from .cypxml cimport cypXML
 

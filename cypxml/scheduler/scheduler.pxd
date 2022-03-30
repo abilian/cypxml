@@ -4,8 +4,8 @@ from libcpp.atomic cimport atomic
 from libc.stdio cimport printf
 from libc.stdlib cimport rand
 from posix.unistd cimport sysconf
-from pthread.pthreads cimport *
-from pthread.semaphore cimport *
+from ..pthread.pthreads cimport *
+from ..pthread.semaphore cimport *
 
 cdef extern from "<unistd.h>" nogil:
     enum: _SC_NPROCESSORS_ONLN  # Seems to not be included in "posix.unistd".

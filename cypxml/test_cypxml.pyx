@@ -1,15 +1,15 @@
-from stdlib.string cimport Str
-from stdlib.format cimport format
-from libcythonplus.dict cimport cypdict
-from libcythonplus.list cimport cyplist
-
-from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate
+from os.path import abspath, dirname, join
 
 from libc.stdio cimport *
 
-from .cypxml cimport cypXML
+from libcythonplus.dict cimport cypdict
+from libcythonplus.list cimport cyplist
 
-from os.path import abspath, dirname, join
+from .stdlib.string cimport Str
+from .stdlib.format cimport format
+from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate
+
+from .cypxml cimport cypXML
 
 
 base_path = abspath(dirname(__file__))

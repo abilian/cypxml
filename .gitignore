@@ -3,3 +3,4 @@ __pycache__
 /build
 /build_fmt
 /libfmt
+cypxml.egg-info/

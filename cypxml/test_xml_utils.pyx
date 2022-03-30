@@ -1,12 +1,14 @@
-from stdlib.string cimport Str
 from libcythonplus.dict cimport cypdict
 from libcythonplus.list cimport cyplist
-from stdlib.format cimport format
+
+from .stdlib.string cimport Str
+from .stdlib.format cimport format
 
 from .stdlib.xml_utils cimport replace_one, replace_all
 from .stdlib.xml_utils cimport escape, escaped, unescape, unescaped
 from .stdlib.xml_utils cimport quoteattr, quotedattr, nameprep
 from .stdlib.xml_utils cimport concate, indented
+
 
 cdef bint test_replace_one_1():
     cdef Str src

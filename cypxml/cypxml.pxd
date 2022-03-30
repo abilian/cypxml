@@ -1,14 +1,10 @@
-from stdlib.string cimport Str
-from stdlib._string cimport string
-from stdlib.format cimport format
 from libcythonplus.dict cimport cypdict
 from libcythonplus.list cimport cyplist
 
+from .stdlib.string cimport Str
+from .stdlib.format cimport format
 from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate, indented
-
-# from scheduler.scheduler cimport SequentialMailBox, NullResult, Scheduler
-# Using BatchMailBox seems more fast:
-from scheduler.scheduler cimport BatchMailBox, NullResult, Scheduler
+from .scheduler.scheduler cimport BatchMailBox, NullResult, Scheduler
 
 
 cdef cypclass cypXML:
@@ -24,15 +20,14 @@ cdef cypclass cypXML:
     cyplist[Elem] rope
 
     __init__(self):
-        # self.nb_workers = 0  # 0 => will use the detected nb of CPU
         self.nb_workers = 0
         self.max_depth = 3
         self.version = Str()
         self.indent_space = Str("  ")
         self.rope = cyplist[Elem]()
         # self.root = cypElement(Str(), Str("  "), Str(""), self.rope)
-        self.root = NULL
         # self.root.children = cyplist[cypElement]()
+        self.root = NULL
         self.content = cyplist[Str]()
         self.chunks = NULL
 
@@ -68,8 +63,6 @@ cdef cypclass cypXML:
             ))
 
     Elem tag(self, Str name):
-        cdef cypElement e
-
         if self.root is NULL:
             self.root = cypElement(Str(), self.indent_space, Str(), self.rope)
             self.root.child_space = Str()
@@ -79,8 +72,6 @@ cdef cypclass cypXML:
         return self.tag(Str(name))
 
     void append(self, Str content):
-        cdef cypElement e
-
         if self.root is NULL:
             self.root = cypElement(Str(), self.indent_space, Str(), self.rope)
             self.root.child_space = Str()
@@ -125,10 +116,7 @@ cdef cypclass cypXML:
         for link in self.rope:
             link.cut()
         self.rope.clear()
-        # bug in garbage coll : that lines should not be necessary, the one
-        # above should be enough:
         self.root.cut_rope()
-        # self.rope = NULL
 
         scheduler = Scheduler(self.nb_workers)
         root = consume(self.root)
@@ -188,7 +176,6 @@ cdef cypclass DumpRoot activable:
         self.recorder = activate (consume Recorder(scheduler, NULL, 0))
         self.element = consume root
         self.max_depth = max_depth
-        # we now size is > 0 for root element
 
     void run(self):
         cdef int index
@@ -267,10 +254,10 @@ cdef cypclass Recorder activable:
                 self.result = consume result
             else:
                 self.parent_recorder.store(
-                                NULL,
-                                self.parent_index,
-                                consume(result)
-                                )
+                                            NULL,
+                                            self.parent_index,
+                                            consume(result)
+                                            )
         return
 
     void store(self, int key, iso Str value):

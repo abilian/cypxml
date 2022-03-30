@@ -1,4 +1,4 @@
-from stdlib.string cimport Str
+from .string cimport Str
 
 
 

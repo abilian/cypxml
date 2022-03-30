@@ -1,11 +1,10 @@
-from stdlib.string cimport Str
-from stdlib.format cimport format
 from libcythonplus.dict cimport cypdict
 from libcythonplus.list cimport cyplist
 
-from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate
-
-from scheduler.scheduler cimport SequentialMailBox, NullResult, Scheduler
+from .stdlib.string cimport Str
+from .stdlib.format cimport format
+from .stdlib.xml_utils cimport escaped, quotedattr, nameprep, concate, indented
+from .scheduler.scheduler cimport BatchMailBox, NullResult, Scheduler
 
 
 cdef Str to_str(byte_or_string):
@@ -16,4 +15,4 @@ cdef Str to_str(byte_or_string):
 
 
 def cypxml_to_py_str(xml):
-    return xml.dump().decode("utf-8")
+    return xml.dump().bytes().decode("utf-8")
